@@ -1,3 +1,4 @@
 name: mx-project
 version: '${project.version}'
-main: mx.mxproject.Mx_project
+main: mx.project.Mx_project
+depend: [ ProtocolLib ]

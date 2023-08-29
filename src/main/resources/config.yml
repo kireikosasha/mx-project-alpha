@@ -1,0 +1,79 @@
+
+
+# configuration file for MX PROJECT anticheat
+
+IKnowWhatImDo: true
+
+# checks
+
+#COMBAT
+KillauraForced:
+  enable: true
+  vl: 30
+  vlfader: 2
+
+KillauraVM:
+  enable: true
+  #pitch based
+  default:
+    enable: true
+    vl: 20
+    vlfader: 3
+    vlstop: 40
+    brutality: 4.5
+    displacement factor: 1
+    center offset: 0
+    point express: 4
+    air express offset: 9.25
+    balancer:
+      # balancer
+      # 1 2 3 | 4 5 6 7 | 8 9
+      # 1 2 3 - decreace to multi (+ bigger VL)
+      # 8 9 - increace to multi (- smaller VL)
+      enabled: true
+      increace: 5.0 # value like "8 9"
+      increace_multi: 2 #balancer +
+      decreace: 2.0 # value like "1 2 3"
+      decreace_multi: 2.5 #balancer -
+      #balancer created for advanced flags
+
+  #yaw based
+  point:
+    enable: true
+    vl: 20
+    vlfader: 5
+    vlstop: 40
+    brutality: 2.75
+    displacement factor: 1
+    center offset: 0
+    balancer:
+      # balancer
+      # 1 2 3 | 4 5 6 7 | 8 9
+      # 1 2 3 - decreace to multi (+ bigger VL)
+      # 8 9 - increace to multi (- smaller VL)
+      enabled: true
+      increace: 3.0 # value like "8 9"
+      increace_multi: 2 #balancer +
+      decreace: 2.75 # value like "1 2 3"
+      decreace_multi: 2.5 #balancer -
+      #balancer created for advanced flags
+
+#MOVEMENT
+Move:
+  A:
+    enable: true
+    vl: 10
+    vlstop: 75
+    vlfader: 10
+  B:
+    enable: true
+    vl: 15
+    vlstop: 75
+    vlfader: 5
+# vl manager
+# %player% - player placeholder
+# %reason% - reason placeholder
+
+PunishCommand: "kick %player% %reason%"
+PunishVL: 75
+

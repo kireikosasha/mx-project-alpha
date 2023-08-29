@@ -1,0 +1,11 @@
+
+           if (saveballfalluse.get(player) > 0) {
+                double faderoldY = fadersilentflydown.get(player).getY();
+                double faderchangeY = faderoldY - location.getY();
+                if (faderchangeY < -1) {
+                    if (saveballfalluse.get(player) > 0) {
+                        saveballfalluse.put(player, saveballfalluse.get(player) - 0.1F);
+                    }
+                    fadersilentflydown.put(player, location);
+                }
+            }

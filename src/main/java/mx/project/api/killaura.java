@@ -4,24 +4,46 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import mx.project.Mx_project;
+import org.bukkit.entity.Player;
 
-import static mx.project.Mx_project.cfg;
-import static mx.project.checks.combat.KillauraB.packetGetterKillauraB;
+import static mx.project.api.flag.blocker;
+import static mx.project.checks.combat.KillauraForced.packetGetterKillauraForced;
+import static mx.project.checks.combat.KillauraVM.packetGetterKillauraVM;
 
-public class hit_write extends PacketAdapter {
-    public hit_write() {
+public class killaura extends PacketAdapter {
+    public killaura() {
         super(Mx_project.getInstance(),
                 PacketType.Play.Client.USE_ENTITY);
 
     }
-    public static boolean killauraB = (boolean) cfg.get("KillauraB");
+    static boolean killauraForced = true;
+    static boolean killauraVM = true;
+
+    public void onEnable() {
+        killauraForced = Mx_project.getInstance().getConfig().getConfigurationSection("KillauraForced").getBoolean("enable");
+        killauraVM = Mx_project.getInstance().getConfig().getConfigurationSection("KillauraVM").getBoolean("enable");
+    }
 
     @Override
     public void onPacketReceiving(PacketEvent event) {
-        Mx_project.getInstance().getLogger().info("lox");
-        if (killauraB) {
-            packetGetterKillauraB(event);
+        Player player = event.getPlayer();
+        if(blocker.containsKey(event.getPlayer())) {
+            if(blocker.get(player) > 0) {
+                blocker.put(player, blocker.get(player) - 1);
+                event.setCancelled(true);
+            } else {
+                event.setCancelled(false);
+            }
+        } else { event.setCancelled(false); }
+        if (killauraForced) {
+            packetGetterKillauraForced(event);
         }
-        super.onPacketReceiving(event);
+        if (killauraVM) {
+            packetGetterKillauraVM(event);
+        }
     }
+
 }
+
+
+
