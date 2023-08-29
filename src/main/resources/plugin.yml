@@ -1,0 +1,3 @@
+name: mx-project
+version: '${project.version}'
+main: mx.mxproject.Mx_project
