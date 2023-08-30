@@ -134,7 +134,7 @@ public class KillauraVM {
             // player.sendMessage("Proceed: " + yaw + " Emulate: " + result);
 
             if (!buffer.containsKey(event.getPlayer())) {
-                buffer.put(event.getPlayer(), pitch);
+                buffer.put(event.getPlayer(), yaw);
             } else {
                 double centerOP = Math.abs(pitch);
                 if (calculateVal(yaw, result, (double) cfg.get("pointBrutality"), (double) cfg.get("pointBalancerincreace")
@@ -190,7 +190,7 @@ public class KillauraVM {
                 } else {
                     flag.FlagPlayerFader(player, "KillauraVMpoint", (Double) cfg.get("pointVLFader"));
                 }
-                buffer.put(event.getPlayer(), pitch);
+                buffer.put(event.getPlayer(), yaw);
             }
         }
 

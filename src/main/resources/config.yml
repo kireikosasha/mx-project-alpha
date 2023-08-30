@@ -1,4 +1,3 @@
-
 # configuration file for MX PROJECT anticheat
 
 IKnowWhatImDo: true
@@ -39,11 +38,11 @@ KillauraVM:
   #yaw based
   point:
     enable: true
-    vl: 2
+    vl: 3
     vlfader: 8
-    vlstop: 35
+    vlstop: 60
     brutality: 1.25
-    displacement factor: 15
+    displacement factor: 10
     center offset: 0
     balancer:
       # balancer
