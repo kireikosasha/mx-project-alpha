@@ -40,10 +40,10 @@ KillauraVM:
   #yaw based
   point:
     enable: true
-    vl: 20
+    vl: 10
     vlfader: 5
-    vlstop: 40
-    brutality: 6.5
+    vlstop: 25
+    brutality: 1.25
     displacement factor: 1
     center offset: 0
     balancer:
@@ -53,7 +53,7 @@ KillauraVM:
       # 8 9 - increace to multi (- smaller VL)
       enabled: true
       increace: 5.0 # value like "8 9"
-      increace_multi: 2 #balancer +
+      increace_multi: 3 #balancer +
       decreace: 2.75 # value like "1 2 3"
       decreace_multi: 2.5 #balancer -
       #balancer created for advanced flags
