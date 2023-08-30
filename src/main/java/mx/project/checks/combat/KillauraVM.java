@@ -125,14 +125,24 @@ public class KillauraVM {
             double dy = myZ - Z;
             double angleRad = Math.atan2(dy, dx);
             double result = Math.toDegrees(angleRad) - 90;
+            double result2 = Math.toDegrees(angleRad) + 90;
+            double result3 = Math.abs(Math.toDegrees(angleRad)) - 180;
+            double result4 = Math.abs(Math.toDegrees(angleRad)) + 180;
+            double result5 = Math.abs(Math.toDegrees(angleRad)) - 90;
+            double result6 = Math.abs(Math.toDegrees(angleRad)) + 90;
             double offset = (double) cfg.get("pointOffset");
-            // Mx_project.getInstance().getLogger().warning("Proceed: " + yaw + " Emulate: " + result);
+            player.sendMessage("Proceed: " + yaw + " Emulate: " + result);
 
             if (!buffer.containsKey(event.getPlayer())) {
                 buffer.put(event.getPlayer(), pitch);
             } else {
                 double centerOP = Math.abs(pitch);
-                if (calculateVal(yaw, result, (double) cfg.get("pointBrutality"), (double) cfg.get("pointBalancerincreace"))
+                if (calculateVal(yaw, result, (double) cfg.get("pointBrutality"), (double) cfg.get("pointBalancerincreace")
+                ) || calculateVal(yaw, result2, (double) cfg.get("pointBrutality"), (double) cfg.get("pointBalancerincreace"))
+                        || calculateVal(yaw, result3, (double) cfg.get("pointBrutality"), (double) cfg.get("pointBalancerincreace"))
+                        || calculateVal(yaw, result4, (double) cfg.get("pointBrutality"), (double) cfg.get("pointBalancerincreace"))
+                        || calculateVal(yaw, result5, (double) cfg.get("pointBrutality"), (double) cfg.get("pointBalancerincreace"))
+                        || calculateVal(yaw, result6, (double) cfg.get("pointBrutality"), (double) cfg.get("pointBalancerincreace"))
                         && !calculateVal(yaw, buffer.get(player), (double) cfg.get("pointVLfactor"), 0)  && centerOP > offset) {
                     if ((boolean) cfg.get("pointBalancer")) {
                         double vl_final;

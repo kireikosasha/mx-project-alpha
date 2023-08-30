@@ -17,11 +17,11 @@ KillauraVM:
   #pitch based
   default:
     enable: true
-    vl: 20
+    vl: 10
     vlfader: 3
-    vlstop: 40
+    vlstop: 30
     brutality: 4.5
-    displacement factor: 1
+    displacement factor: 3
     center offset: 0
     point express: 4
     air express offset: 9.25
@@ -43,7 +43,7 @@ KillauraVM:
     vl: 20
     vlfader: 5
     vlstop: 40
-    brutality: 2.75
+    brutality: 6.5
     displacement factor: 1
     center offset: 0
     balancer:
@@ -52,7 +52,7 @@ KillauraVM:
       # 1 2 3 - decreace to multi (+ bigger VL)
       # 8 9 - increace to multi (- smaller VL)
       enabled: true
-      increace: 3.0 # value like "8 9"
+      increace: 5.0 # value like "8 9"
       increace_multi: 2 #balancer +
       decreace: 2.75 # value like "1 2 3"
       decreace_multi: 2.5 #balancer -
