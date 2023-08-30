@@ -131,7 +131,7 @@ public class KillauraVM {
             double result5 = Math.abs(Math.toDegrees(angleRad)) - 90;
             double result6 = Math.abs(Math.toDegrees(angleRad)) + 90;
             double offset = (double) cfg.get("pointOffset");
-            player.sendMessage("Proceed: " + yaw + " Emulate: " + result);
+            // player.sendMessage("Proceed: " + yaw + " Emulate: " + result);
 
             if (!buffer.containsKey(event.getPlayer())) {
                 buffer.put(event.getPlayer(), pitch);
