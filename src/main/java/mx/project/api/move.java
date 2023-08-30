@@ -53,19 +53,21 @@ public class move extends PacketAdapter implements Listener {
                 new PacketAdapter(Mx_project.getInstance(), ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_STATUS) {
                     @Override
                     public void onPacketSending(PacketEvent event) {
+                        Player player = event.getPlayer();
                         try {
                             if (event.getPacketType() == PacketType.Play.Server.ENTITY_STATUS
                                     && event.getPlayer().equals(ProtocolLibrary.getProtocolManager().getEntityFromID(event.getPlayer().getWorld(), event.getPacket().getIntegers().read(0)))) {
                                 int entityId = event.getPacket().getIntegers().read(0);
                                 byte status = event.getPacket().getBytes().read(0);
-
                                 if (status == 2) {
                                     Mx_project.getInstance().getLogger().info(event.getPlayer().getLocation().toString());
+                                    oldpos.put(event.getPlayer(), event.getPlayer().getLocation());
+                                    if (saveballfalluse.get(player).equals(0F)) {
+                                        saveballfalluse.put(player, 1F);
+                                    }
                                 }
                             }
-                        } finally {
-
-                        }
+                        } finally {  }
                     }
                     @Override
                     public void onPacketReceiving(PacketEvent event) {
@@ -97,14 +99,15 @@ public class move extends PacketAdapter implements Listener {
     public void onPacketReceiving(PacketEvent event) {
         Player player = event.getPlayer();
         Location location = player.getLocation();
-        Location location_down = location.add(0, -0.2, 0);
         Material m = location.getBlock().getType();
-        Material m_down = location_down.getBlock().getType();
 
-        if(player.isFlying() || m.equals(Material.STATIONARY_WATER) || m.equals(Material.WATER) || player.isGliding() || m_down.isSolid() || m.isSolid()) {
+        if(player.isFlying() || m.equals(Material.STATIONARY_WATER) || m.equals(Material.WATER) || player.isGliding()) {
+            if (saveballfalluse.get(player).equals(0F)) {
+                saveballfalluse.put(player, 1F);
+            }
             oldpos.put(player, location);
         }
-        if(player.isOnGround()) {
+        if(player.isOnGround() || m.isSolid()) {
             oldpos.put(player, location);
             try {
                 moveCheck(event, 1);

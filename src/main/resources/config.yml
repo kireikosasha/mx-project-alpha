@@ -62,13 +62,13 @@ KillauraVM:
 Move:
   A:
     enable: true
-    vl: 10
-    vlstop: 75
-    vlfader: 10
+    vl: 5
+    vlstop: 0
+    vlfader: 5
   B:
     enable: true
-    vl: 15
-    vlstop: 75
+    vl: 5
+    vlstop: 10
     vlfader: 5
 # vl manager
 # %player% - player placeholder

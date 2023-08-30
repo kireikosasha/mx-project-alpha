@@ -21,7 +21,7 @@ import static mx.project.api.vmp.downByVMP;
 
 public class MoveABCD {
 
-    final static double basicY = 1.2491870787446828;
+    final static double basicY = 1.253;
     public static HashMap<Object, Object> cfg = new HashMap<>();
     public static HashMap<Player, Location> oldconfirmpos = new HashMap<>();
     public static HashMap<Player, Long> ballsbuffer = new HashMap<>();
