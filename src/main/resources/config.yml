@@ -1,5 +1,4 @@
 
-
 # configuration file for MX PROJECT anticheat
 
 IKnowWhatImDo: true
@@ -20,8 +19,8 @@ KillauraVM:
     vl: 10
     vlfader: 3
     vlstop: 30
-    brutality: 4.5
-    displacement factor: 3
+    brutality: 3.75
+    displacement factor: 5
     center offset: 0
     point express: 4
     air express offset: 9.25
@@ -31,7 +30,7 @@ KillauraVM:
       # 1 2 3 - decreace to multi (+ bigger VL)
       # 8 9 - increace to multi (- smaller VL)
       enabled: true
-      increace: 5.0 # value like "8 9"
+      increace: 1.0 # value like "8 9"
       increace_multi: 2 #balancer +
       decreace: 2.0 # value like "1 2 3"
       decreace_multi: 2.5 #balancer -
@@ -41,7 +40,7 @@ KillauraVM:
   point:
     enable: true
     vl: 2
-    vlfader: 3
+    vlfader: 8
     vlstop: 35
     brutality: 1.25
     displacement factor: 15
@@ -76,4 +75,3 @@ Move:
 
 PunishCommand: "kick %player% %reason%"
 PunishVL: 75
-
