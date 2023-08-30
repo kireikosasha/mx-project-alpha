@@ -9,3 +9,36 @@
                     fadersilentflydown.put(player, location);
                 }
             }
+
+                    double oldY = oldposflydown.get(player).getY();
+                    double changeY = oldY - location.getY();
+                    if (changeY < 0) {
+                        double silentoldY = silentflydown.get(player).getY();
+                        double silentchangeY = silentoldY - location.getY();
+                        if (silentchangeY < -1) {
+                            ballfall.put(player, ballfall.get(player) + 1);
+                            silentflydown.put(player, location);
+                        }
+                    } else {
+                        if (ballfall.get(player) != 0) {
+                            saveballfall.put(player, ballfall.get(player));
+                        }
+                        ballfall.put(player, 0L);
+                        if (player.isOnGround() && !m_down.equals(SLIME_BLOCK)) {
+                            saveballfalluse.put(player, (float) 0L);
+                        }
+                    }
+
+                            if (location.add(0, -1, 0).getBlock().getType().equals(SLIME_BLOCK)) {
+                                double distOldToPosition = keepground.get(player).getY() - player.getLocation().getY();
+                                Mx_project.getInstance().getLogger().info(String.valueOf(distOldToPosition));
+                                if(distOldToPosition > 0) {
+                                    saveballfalluse.put(player, (float) Math.ceil(distOldToPosition) + 3);
+                                }
+
+                            } else {
+                                if(player.isOnGround()) {
+                                    keepground.put(player, location);
+                                    saveballfalluse.put(player, 0F);
+                                }
+                            }

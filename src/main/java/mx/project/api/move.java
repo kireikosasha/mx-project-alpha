@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import mx.project.Mx_project;
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
@@ -33,12 +35,10 @@ public class move extends PacketAdapter implements Listener {
 
     public static HashMap<Player, Location> oldpos = new HashMap<>();
     public static HashMap<Player, Location> oldposflydown = new HashMap<>();
-    public static HashMap<Player, Location> silentflydown = new HashMap<>();
-    public static HashMap<Player, Location> fadersilentflydown = new HashMap<>();
-    public static HashMap<Player, Byte> keepground = new HashMap<>();
-    public static HashMap<Player, Long> ballfall = new HashMap<>();
-    public static HashMap<Player, Long> saveballfall = new HashMap<>();
+    public static HashMap<Player, Location> silentoldpos = new HashMap<>();
+    public static HashMap<Player, Location> keepground = new HashMap<>();
     public static HashMap<Player, Float> saveballfalluse = new HashMap<>();
+    public static HashMap<Player, Boolean> slimesession = new HashMap<>();
 
     public move() {
         super(Mx_project.getInstance(),
@@ -66,7 +66,18 @@ public class move extends PacketAdapter implements Listener {
                         } finally {
 
                         }
+                    }
+                    @Override
+                    public void onPacketReceiving(PacketEvent event) {
+                        Player player = event.getPlayer();
+                        BlockPosition blockPos = event.getPacket().getBlockPositionModifier().read(0);
 
+                        if (playerIsFallingOnSlimeBlock(player, blockPos)) {
+                            double distOldToPosition = (keepground.get(player).getY() - player.getLocation().getY()) / 1.7;
+                            if(distOldToPosition > 0) {
+                                saveballfalluse.put(player, (float) Math.ceil(distOldToPosition));
+                            }
+                        }
                     }
                 }
         );
@@ -76,13 +87,10 @@ public class move extends PacketAdapter implements Listener {
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
-        oldposflydown.put(event.getPlayer(), event.getPlayer().getLocation());
-        silentflydown.put(event.getPlayer(), event.getPlayer().getLocation());
-        fadersilentflydown.put(event.getPlayer(), event.getPlayer().getLocation());
-        ballfall.put(event.getPlayer(), 0L);
-        saveballfall.put(event.getPlayer(), 0L);
         saveballfalluse.put(event.getPlayer(), (float) 0L);
-        keepground.put(event.getPlayer(), (byte) 0);
+        slimesession.put(event.getPlayer(), false);
+        keepground.put(event.getPlayer(), event.getPlayer().getLocation());
+        silentoldpos.put(event.getPlayer(), event.getPlayer().getLocation());
     }
 
     @Override
@@ -92,27 +100,7 @@ public class move extends PacketAdapter implements Listener {
         Location location_down = location.add(0, -0.2, 0);
         Material m = location.getBlock().getType();
         Material m_down = location_down.getBlock().getType();
-        double oldY = oldposflydown.get(player).getY();
-        double changeY = oldY - location.getY();
-        if (changeY < 0) {
-            double silentoldY = silentflydown.get(player).getY();
-            double silentchangeY = silentoldY - location.getY();
-            if (silentchangeY < -1) {
-                ballfall.put(player, ballfall.get(player) + 1);
-                silentflydown.put(player, location);
-            }
-        } else {
-            if (ballfall.get(player) != 0) {
-                saveballfall.put(player, ballfall.get(player));
-            }
-            ballfall.put(player, 0L);
-            if (player.isOnGround() && !m_down.equals(SLIME_BLOCK)) {
-                saveballfalluse.put(player, (float) 0L);
-            }
-        }
-        if (m_down.equals(SLIME_BLOCK)) {
-            saveballfalluse.put(player, Float.valueOf(saveballfall.get(player)));
-        }
+
         if(player.isFlying() || m.equals(Material.STATIONARY_WATER) || m.equals(Material.WATER) || player.isGliding() || m_down.isSolid() || m.isSolid()) {
             oldpos.put(player, location);
         }
@@ -136,7 +124,27 @@ public class move extends PacketAdapter implements Listener {
     public void on(PlayerJumpEvent event) {
         oldpos.put(event.getPlayer(), event.getPlayer().getLocation());
     }
+    private boolean playerIsFallingOnSlimeBlock(Player player, BlockPosition blockPos) {
+        Material blockType = player.getWorld().getBlockAt(blockPos.getX(), blockPos.getY(), blockPos.getZ()).getType();
+        return blockType == Material.SLIME_BLOCK;
+    }
 
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        if (playerIsFallingOnSlimeBlock(player, new BlockPosition(player.getLocation().getBlockX(), player.getLocation().getBlockY() - 1, player.getLocation().getBlockZ()))) {
+            slimesession.put(event.getPlayer(), true);
+            double distOldToPosition = (keepground.get(player).getY() - player.getLocation().getY()) / 1.7;
+            if(distOldToPosition > 0) {
+                saveballfalluse.put(player, (float) Math.ceil(distOldToPosition));
+            }
+        } else if (player.isOnGround() && !playerIsFallingOnSlimeBlock(player, new BlockPosition(player.getLocation().getBlockX(), (player.getLocation().getBlockY() - 2), player.getLocation().getBlockZ()))|| player.isFlying() || player.isGliding()) {
+            keepground.put(player, player.getLocation());
+            saveballfalluse.put(player, 0F);
+            slimesession.put(event.getPlayer(), false);
+        }
+        silentoldpos.put(player, player.getLocation());
+    }
 }
 
 

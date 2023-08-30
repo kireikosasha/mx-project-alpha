@@ -47,8 +47,7 @@ public class MoveABCD {
                 } else {
                     actualY = basicY;
                 }
-                if (distY > actualY + (saveballfalluse.get(player) * 3.5)) {
-                    Mx_project.getInstance().getLogger().info(oldpos.get(player).getY() + " " + location.getY());
+                if (distY > actualY + (saveballfalluse.get(player))) {
                     oldposflag.put(player, oldconfirmpos.get(player));
                     flag.FlagPlayer("MoveA", player, (double) cfg.get("Avl"), (double) cfg.get("Avlstop"));
                 }
