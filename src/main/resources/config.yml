@@ -66,7 +66,7 @@ Move:
   B:
     enable: true
     vl: 5
-    vlstop: 10
+    vlstop: 0
     vlfader: 5
 # vl manager
 # %player% - player placeholder
