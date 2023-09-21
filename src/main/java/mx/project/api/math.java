@@ -10,4 +10,8 @@ public class math {
         var XYPoser = Xposer + Yposer;
         return Math.sqrt(XYPoser);
     }
+    public static double scaleVal(double value, double scale) {
+        double scale2 = Math.pow(10, scale);
+        return Math.ceil(value * scale2) / scale2;
+    }
 }

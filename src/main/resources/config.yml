@@ -68,6 +68,16 @@ Move:
     vl: 5
     vlstop: 0
     vlfader: 5
+MachineLearning:
+  JumpSpeed:
+    enable: true
+    vl: 100
+    vlstop: 15
+    vlfader: 5
+    localvl: 15
+    localvlstop: 30
+    localvlfader: 3
+
 # vl manager
 # %player% - player placeholder
 # %reason% - reason placeholder

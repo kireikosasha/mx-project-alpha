@@ -8,11 +8,14 @@ import mx.project.api.killaura;
 import mx.project.api.move;
 import mx.project.checks.combat.KillauraForced;
 import mx.project.checks.combat.KillauraVM;
+import mx.project.checks.movement.JumpSpeed;
 import mx.project.checks.movement.MoveABCD;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static mx.project.api.read.readAssets;
@@ -28,12 +31,14 @@ public class Mx_project extends JavaPlugin {
     }
     public static String version;
     public static String branch;
+    public static Boolean fork;
 
     public static HashMap<String, Object> mx = new HashMap<>();
-    private ProtocolManager protocolManager;
+    public static HashMap<String, HashMap<Long, Double>> emulation = new HashMap<>();
+    public static HashMap<Long, List<Number>> jumpspeed = new HashMap<>();
 
     public void onLoad() {
-        protocolManager = ProtocolLibrary.getProtocolManager();
+        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     }
 
     @Override
@@ -60,10 +65,16 @@ public class Mx_project extends JavaPlugin {
     }
     public void preBoot() throws InterruptedException {
         mx = new Gson().fromJson(readAssets("mx.json"), new TypeToken<HashMap<String, Object>>(){}.getType());
+        emulation = new Gson().fromJson(readAssets("emulation.ai"), new TypeToken<HashMap<String, HashMap<Long, List<Number>>>>(){}.getType());
+        jumpspeed = new Gson().fromJson(String.valueOf(emulation.get("JumpSpeed")), new TypeToken<HashMap<Long, List<Number>>>(){}.getType());
         version = (String) mx.get("version");
         branch = (String) mx.get("branch");
+        fork = (Boolean) mx.get("fork?");
         this.getLogger().info("Version: " + version);
         this.getLogger().info("Branch: " + branch);
+        if (fork) {
+            this.getLogger().warning("Please note: you are using a modified build of the original MX ANTICHEAT. We are not responsible for problems caused in this build. ");
+        }
         if (!this.getConfig().getBoolean("IKnowWhatImDo")) {
             if (branch.equals("beta")) {
                 this.getLogger().warning("Beta Release can be unstable! Keep it up to date");
@@ -91,6 +102,8 @@ public class Mx_project extends JavaPlugin {
         KillauraVM.initialize();
         MoveABCD MoveABCD = new MoveABCD();
         MoveABCD.onEnable();
+        JumpSpeed JumpSpeed = new JumpSpeed();
+        JumpSpeed.onEnable();
     }
 
 }

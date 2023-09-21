@@ -8,37 +8,42 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import mx.project.Mx_project;
+import mx.project.checks.movement.JumpSpeed;
 import mx.project.checks.movement.MoveABCD;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.plugin.Plugin;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static mx.project.Mx_project.emulation;
+import static mx.project.api.flag.oldposflag;
+import static mx.project.checks.movement.JumpSpeed.jumpSpeedEvent;
 import static mx.project.checks.movement.MoveABCD.moveCheck;
 import static org.bukkit.Material.*;
 
 public class move extends PacketAdapter implements Listener {
 
+    public static int index = 0;
 
     public static HashMap<Player, Location> oldpos = new HashMap<>();
-    public static HashMap<Player, Location> oldposflydown = new HashMap<>();
+    public static HashMap<Player, Location> oldposmove = new HashMap<>();
     public static HashMap<Player, Location> silentoldpos = new HashMap<>();
     public static HashMap<Player, Location> keepground = new HashMap<>();
     public static HashMap<Player, Float> saveballfalluse = new HashMap<>();
+    public static HashMap<Player, Double> moveYdist = new HashMap<>();
+    public static HashMap<Player, Double> moveZdist = new HashMap<>();
+    public static HashMap<Player, Double> moveXdist = new HashMap<>();
+    public static HashMap<Player, Number> airsession = new HashMap<>();
     public static HashMap<Player, Boolean> slimesession = new HashMap<>();
 
     public move() {
@@ -55,19 +60,17 @@ public class move extends PacketAdapter implements Listener {
                     @Override
                     public void onPacketSending(PacketEvent event) {
                         Player player = event.getPlayer();
-                        try {
-                            if (event.getPacketType() == PacketType.Play.Server.ENTITY_STATUS
-                                    && event.getPlayer().equals(ProtocolLibrary.getProtocolManager().getEntityFromID(event.getPlayer().getWorld(), event.getPacket().getIntegers().read(0)))) {
-                                int entityId = event.getPacket().getIntegers().read(0);
-                                byte status = event.getPacket().getBytes().read(0);
-                                if (status == 2) {
-                                    oldpos.put(event.getPlayer(), event.getPlayer().getLocation());
-                                    if (saveballfalluse.get(player).equals(0F)) {
-                                        saveballfalluse.put(player, 1F);
-                                    }
+                        if (event.getPacketType() == PacketType.Play.Server.ENTITY_STATUS
+                                && event.getPlayer().equals(ProtocolLibrary.getProtocolManager().getEntityFromID(event.getPlayer().getWorld(), event.getPacket().getIntegers().read(0)))) {
+                            int entityId = event.getPacket().getIntegers().read(0);
+                            byte status = event.getPacket().getBytes().read(0);
+                            if (status == 2) {
+                                oldpos.put(event.getPlayer(), event.getPlayer().getLocation());
+                                if (saveballfalluse.get(player).equals(0F)) {
+                                    saveballfalluse.put(player, 1F);
                                 }
                             }
-                        } finally {  }
+                        }
                     }
                     @Override
                     public void onPacketReceiving(PacketEvent event) {
@@ -89,12 +92,17 @@ public class move extends PacketAdapter implements Listener {
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
-        saveballfalluse.put(event.getPlayer(), (float) 0L);
-        slimesession.put(event.getPlayer(), false);
-        keepground.put(event.getPlayer(), event.getPlayer().getLocation());
-        silentoldpos.put(event.getPlayer(), event.getPlayer().getLocation());
-        MoveABCD.oldconfirmpos.put(event.getPlayer(), event.getPlayer().getLocation());
-        MoveABCD.oldfallpos.put(event.getPlayer(), false);
+        Player player = event.getPlayer();
+        saveballfalluse.put(player, (float) 0L);
+        slimesession.put(player, false);
+        keepground.put(player, player.getLocation());
+        silentoldpos.put(player, player.getPlayer().getLocation());
+        oldposflag.put(player, player.getLocation());
+        oldposmove.put(player, player.getLocation());
+        airsession.put(player, 0L);
+        MoveABCD.oldconfirmpos.put(player, player.getLocation());
+        MoveABCD.oldfallpos.put(player, false);
+        JumpSpeed.local_vl_data.put(player, 0D);
     }
 
     @Override
@@ -102,6 +110,13 @@ public class move extends PacketAdapter implements Listener {
         Player player = event.getPlayer();
         Location location = player.getLocation();
         Material m = location.getBlock().getType();
+        moveYdist.put(player, location.getY() - oldposmove.get(player).getY());
+        moveXdist.put(player, location.getX() - oldposmove.get(player).getX());
+        moveZdist.put(player, location.getZ() - oldposmove.get(player).getZ());
+
+        if (JumpSpeed.enable) {
+            jumpSpeedEvent(event);
+        }
 
         if(m.equals(Material.STATIONARY_WATER) || m.equals(Material.WATER) || player.isGliding()) {
             MoveABCD.oldfallpos.put(event.getPlayer(), false);
@@ -117,7 +132,7 @@ public class move extends PacketAdapter implements Listener {
             oldpos.put(player, location);
         }
         if(player.isOnGround() || m.isSolid()) {
-            MoveABCD.oldfallpos.put(event.getPlayer(), false);
+            airsession.put(player, 0L);
             MoveABCD.oldconfirmpos.put(event.getPlayer(), event.getPlayer().getLocation());
             MoveABCD.oldfallpos.put(event.getPlayer(), false);
             oldpos.put(player, location);
@@ -127,13 +142,14 @@ public class move extends PacketAdapter implements Listener {
                 throw new RuntimeException(e);
             }
         } else {
+            airsession.put(player, airsession.get(player).longValue() + 1);
             try {
                 moveCheck(event, 2);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-        oldposflydown.put(player, location);
+        oldposmove.put(player, location);
     }
     @EventHandler
     public void on(PlayerJumpEvent event) {
@@ -182,6 +198,7 @@ public class move extends PacketAdapter implements Listener {
         }
         silentoldpos.put(player, player.getLocation());
     }
+
 }
 
 

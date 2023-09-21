@@ -22,8 +22,6 @@ import static mx.project.api.vmp.downByVMP;
 
 public class MoveABCD {
 
-    static double old_y_buf = 5;
-    static double old_y_buf2 = 5;
 
     final static double basicY = 1.253;
     public static HashMap<Object, Object> cfg = new HashMap<>();
@@ -47,15 +45,12 @@ public class MoveABCD {
                 if (y > old_y + (saveballfalluse.get(player) * 1.3)) {
                     if (oldfallpos.get(player)) {
                         flag.FlagPlayer("MoveB", player, (double) cfg.get("Bvl"), (double) cfg.get("Bvlstop"));
-                        player.sendMessage(y + " [FLAG] bigger that " + old_y);
-                        player.sendMessage(old_y_buf + "[LOG] bigger that" + old_y_buf2);
                     }
                 } else {
                     if (y != old_y) {
                         oldposflag.put(player, oldconfirmpos.get(player));
                         oldfallpos.put(player, true);
-                        old_y_buf = old_y;
-                        old_y_buf2 = y;
+                        flag.FlagPlayerFader(player, "MoveB", (Double) cfg.get("Bvlfader"));
                     }
                 }
             }

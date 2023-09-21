@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 
 public class read {
 
@@ -29,5 +30,15 @@ public class read {
     }
     public static ConfigurationSection readCfgSection(Object key) {
         return Mx_project.getInstance().getConfig().getConfigurationSection((String) key);
+    }
+    public static boolean realContains(List<Number> list, double value) {
+        for (Number number : list) {
+            String value_s = String.valueOf(Math.abs(value));
+            double listval = Math.abs(number.doubleValue());
+            if (String.valueOf(listval).equals(value_s) && listval == Math.abs(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
