@@ -37,6 +37,7 @@ public class JumpSpeed {
     static double local_vl_stop;
     static double local_vl_fader;
     static double local_vl;
+    static boolean advanced_support;
 
     public void onEnable() {
         enable = read.readCfgSection("MachineLearning").getConfigurationSection("JumpSpeed").getBoolean("enable");
@@ -47,6 +48,8 @@ public class JumpSpeed {
         local_vl = read.readCfgSection("MachineLearning").getConfigurationSection("JumpSpeed").getDouble("localvl");
         local_vl_stop = read.readCfgSection("MachineLearning").getConfigurationSection("JumpSpeed").getDouble("localvlstop");
         local_vl_fader = read.readCfgSection("MachineLearning").getConfigurationSection("JumpSpeed").getDouble("localvlfader");
+
+        advanced_support = read.readCfgSection("MachineLearning").getConfigurationSection("JumpSpeed").getBoolean("advanced_support");
 
     }
 
@@ -65,10 +68,15 @@ public class JumpSpeed {
             if (read.realContains(proceed_val, y_factor)) {
                 LocalFlagPlayerFader(player);
             } else {
-                // player.sendMessage(y_factor + " " + id);
                 // player.sendMessage(proceed_val.toString());
                 // learning.putLearn(1, (Long) airsession.get(player), y_factor);
-                LocalFlagPlayer(player);
+                if (advanced_support && y_factor < 1.2) {
+                    LocalFlagPlayer(player);
+                } else {
+                    if (!advanced_support) {
+                        LocalFlagPlayer(player);
+                    }
+                }
 
             }
         }

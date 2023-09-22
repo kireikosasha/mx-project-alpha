@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static mx.project.Mx_project.emulation;
+import static mx.project.api.flag.blocker;
 import static mx.project.api.flag.oldposflag;
 import static mx.project.checks.movement.JumpSpeed.jumpSpeedEvent;
 import static mx.project.checks.movement.MoveABCD.moveCheck;
@@ -100,6 +101,7 @@ public class move extends PacketAdapter implements Listener {
         oldposflag.put(player, player.getLocation());
         oldposmove.put(player, player.getLocation());
         airsession.put(player, 0L);
+        blocker.put(player, 0L);
         MoveABCD.oldconfirmpos.put(player, player.getLocation());
         MoveABCD.oldfallpos.put(player, false);
         JumpSpeed.local_vl_data.put(player, 0D);

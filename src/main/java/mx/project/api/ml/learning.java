@@ -21,6 +21,7 @@ public class learning {
             } else {
                 List<Number> local = new ArrayList<>();
                 local.add(data);
+                Mx_project.getInstance().getLogger().info("New value: " + data);
                 base.put(index, local);
             }
         }

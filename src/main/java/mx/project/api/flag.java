@@ -6,6 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import java.io.IOException;
 import java.util.HashMap;
 
 import static mx.project.api.flag.reason;
@@ -33,7 +35,7 @@ public class flag {
             Location location = oldposflag.get(player);
             player.teleport(location);
             Mx_project.getInstance().getLogger().warning(player.getName() + " failed " + reason_s + "! VL: " + vl.get(player));
-            if(blocker.containsKey(player)) {
+            if(blocker.containsKey(player) && reason_s.toLowerCase().contains("killaura")) {
                 blocker.put(player, blocker.get(player) + 6);
             } else {
                 blocker.put(player, 0L);
@@ -44,8 +46,14 @@ public class flag {
             String command = (String) Mx_project.getInstance().getConfig().get("PunishCommand");
             command = command.replace("%player%", player.getName());
             command = command.replace("%reason%", reason_s);
-            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-            Bukkit.dispatchCommand(console, command);
+
+            try {
+                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                Bukkit.dispatchCommand(console, command);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
         }
     }
     public static void FlagPlayerFader(Player player, String reason_text, double vl_fader) {

@@ -66,17 +66,23 @@ Move:
   B:
     enable: true
     vl: 5
-    vlstop: 0
+    vlstop: 7
     vlfader: 5
 MachineLearning:
   JumpSpeed:
     enable: true
+    #global vl
     vl: 100
     vlstop: 15
     vlfader: 5
+    # local vl
     localvl: 15
     localvlstop: 30
     localvlfader: 3
+    #advanced support (ping / lags protection)
+    #but its cause the weakest blatant checks
+    # (recommend)
+    advanced_support: true
 
 # vl manager
 # %player% - player placeholder

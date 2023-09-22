@@ -6,7 +6,7 @@
 
     <groupId>mx</groupId>
     <artifactId>mx-project</artifactId>
-    <version>901</version>
+    <version>902</version>
     <packaging>jar</packaging>
 
     <name>mx-project</name>
