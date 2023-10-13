@@ -36,6 +36,7 @@ public class Mx_project extends JavaPlugin {
     public static HashMap<String, Object> mx = new HashMap<>();
     public static HashMap<String, HashMap<Long, Double>> emulation = new HashMap<>();
     public static HashMap<Long, List<Number>> jumpspeed = new HashMap<>();
+    public static HashMap<Long, List<Number>> jumpspeedap = new HashMap<>();
 
     public void onLoad() {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
@@ -67,6 +68,7 @@ public class Mx_project extends JavaPlugin {
         mx = new Gson().fromJson(readAssets("mx.json"), new TypeToken<HashMap<String, Object>>(){}.getType());
         emulation = new Gson().fromJson(readAssets("emulation.ai"), new TypeToken<HashMap<String, HashMap<Long, List<Number>>>>(){}.getType());
         jumpspeed = new Gson().fromJson(String.valueOf(emulation.get("JumpSpeed")), new TypeToken<HashMap<Long, List<Number>>>(){}.getType());
+        jumpspeedap = new Gson().fromJson(String.valueOf(emulation.get("JumpSpeedAp")), new TypeToken<HashMap<Long, List<Number>>>(){}.getType());
         version = (String) mx.get("version");
         branch = (String) mx.get("branch");
         fork = (Boolean) mx.get("fork?");

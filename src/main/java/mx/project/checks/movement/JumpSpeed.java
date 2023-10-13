@@ -1,6 +1,7 @@
 package mx.project.checks.movement;
 
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import mx.project.Mx_project;
@@ -21,8 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import static mx.project.Mx_project.emulation;
-import static mx.project.Mx_project.jumpspeed;
+import static mx.project.Mx_project.*;
 import static mx.project.api.flag.oldposflag;
 import static mx.project.api.move.*;
 
@@ -58,26 +58,46 @@ public class JumpSpeed {
         Location location = event.getPlayer().getLocation();
         double y_factor = math.scaleVal(moveYdist.get(player), 2);
         List<Number> proceed_val;
+        List<Number> proceed_val_ap;
         Material m = location.getBlock().getType();
         if (airsession.get(player).longValue() < jumpspeed.size() && !player.isOnGround()
          && !m.equals(Material.STATIONARY_WATER) && !m.equals(Material.WATER) && !player.isFlying() && !player.isGliding()
-         && saveballfalluse.get(player) < 1) {
+         && saveballfalluse.get(player) < 1 && !playerIsFallingOnSlimeBlock(player,
+                new BlockPosition(player.getLocation().getBlockX(), (player.getLocation().getBlockY() - 1), player.getLocation().getBlockZ()))) {
             Long id = airsession.get(player).longValue();
             proceed_val = jumpspeed.get(id);
-            // learning.putLearn(1, move.airsession.get(player), y_factor);
-            if (read.realContains(proceed_val, y_factor)) {
-                LocalFlagPlayerFader(player);
-            } else {
-                // player.sendMessage(proceed_val.toString());
-                // learning.putLearn(1, (Long) airsession.get(player), y_factor);
-                if (advanced_support && y_factor < 1.2) {
-                    LocalFlagPlayer(player);
+            proceed_val_ap = jumpspeedap.get(id);
+            // learning.putLearn(1, (Long) airsession.get(player), y_factor);
+            if (player.hasPotionEffect(PotionEffectType.JUMP)) {
+                if (read.realContains(proceed_val, y_factor) || read.realContains(proceed_val_ap, y_factor)) {
+                    LocalFlagPlayerFader(player);
                 } else {
-                    if (!advanced_support) {
+                    // player.sendMessage(proceed_val.toString());
+                    // learning.putLearn(1, (Long) airsession.get(player), y_factor);
+                    if (advanced_support && y_factor < 1.2) {
                         LocalFlagPlayer(player);
+                    } else {
+                        if (!advanced_support) {
+                            LocalFlagPlayer(player);
+                        }
                     }
-                }
 
+                }
+            } else {
+                if (read.realContains(proceed_val, y_factor)) {
+                    LocalFlagPlayerFader(player);
+                } else {
+                    // player.sendMessage(proceed_val.toString());
+                    // learning.putLearn(1, (Long) airsession.get(player), y_factor);
+                    if (advanced_support && y_factor < 1.2) {
+                        LocalFlagPlayer(player);
+                    } else {
+                        if (!advanced_support) {
+                            LocalFlagPlayer(player);
+                        }
+                    }
+
+                }
             }
         }
 

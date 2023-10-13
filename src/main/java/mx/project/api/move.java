@@ -160,7 +160,7 @@ public class move extends PacketAdapter implements Listener {
         MoveABCD.oldconfirmpos.put(event.getPlayer(), event.getPlayer().getLocation());
         MoveABCD.oldfallpos.put(event.getPlayer(), false);
     }
-    private boolean playerIsFallingOnSlimeBlock(Player player, BlockPosition blockPos) {
+    public static boolean playerIsFallingOnSlimeBlock(Player player, BlockPosition blockPos) {
         Material blockType = player.getWorld().getBlockAt(blockPos.getX(), blockPos.getY(), blockPos.getZ()).getType();
         return blockType == Material.SLIME_BLOCK;
     }

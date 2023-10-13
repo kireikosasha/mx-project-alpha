@@ -65,8 +65,8 @@ Move:
     vlfader: 5
   B:
     enable: true
-    vl: 5
-    vlstop: 7
+    vl: 3
+    vlstop: 16
     vlfader: 5
 MachineLearning:
   JumpSpeed:
@@ -77,7 +77,7 @@ MachineLearning:
     vlfader: 5
     # local vl
     localvl: 15
-    localvlstop: 30
+    localvlstop: 35
     localvlfader: 3
     #advanced support (ping / lags protection)
     #but its cause the weakest blatant checks

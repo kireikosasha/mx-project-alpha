@@ -66,7 +66,7 @@ public class MoveABCD {
                 double distY = location.getY() - oldpos.get(player).getY();
                 double actualY;
                 if(player.hasPotionEffect(PotionEffectType.JUMP)) {
-                    actualY = basicY * (player.getPotionEffect(PotionEffectType.JUMP).getAmplifier() + 2);
+                    actualY = basicY * (player.getPotionEffect(PotionEffectType.JUMP).getAmplifier() + 1.9) * 1.3;
                 } else {
                     actualY = basicY;
                 }
