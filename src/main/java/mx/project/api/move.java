@@ -9,7 +9,6 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import mx.project.Mx_project;
 import mx.project.checks.movement.JumpSpeed;
 import mx.project.checks.movement.MoveABCD;
@@ -21,7 +20,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import static mx.project.Mx_project.emulation;
 import static mx.project.api.flag.blocker;
 import static mx.project.api.flag.oldposflag;
 import static mx.project.checks.movement.JumpSpeed.jumpSpeedEvent;
-import static mx.project.checks.movement.MoveABCD.moveCheck;
+import static mx.project.checks.movement.MoveABCD.*;
 import static org.bukkit.Material.*;
 
 public class move extends PacketAdapter implements Listener {
@@ -46,6 +47,7 @@ public class move extends PacketAdapter implements Listener {
     public static HashMap<Player, Double> moveXdist = new HashMap<>();
     public static HashMap<Player, Number> airsession = new HashMap<>();
     public static HashMap<Player, Boolean> slimesession = new HashMap<>();
+    public static List<Location> ignored_locations = new ArrayList<>();
 
     public move() {
         super(Mx_project.getInstance(),
@@ -102,9 +104,21 @@ public class move extends PacketAdapter implements Listener {
         oldposmove.put(player, player.getLocation());
         airsession.put(player, 0L);
         blocker.put(player, 0L);
+        oldydist.put(player, 0D);
+        local_c.put(player, 0);
         MoveABCD.oldconfirmpos.put(player, player.getLocation());
         MoveABCD.oldfallpos.put(player, false);
         JumpSpeed.local_vl_data.put(player, 0D);
+    }
+
+    @EventHandler
+    public void on(PlayerTeleportEvent event) {
+        if (!ignored_locations.contains(event.getTo())) {
+            Player player = event.getPlayer();
+            oldpos.put(player, event.getTo());
+        } else {
+            ignored_locations.remove(event.getTo());
+        }
     }
 
     @Override

@@ -20,5 +20,11 @@ public class moveabcd {
         cfg.put("Bvl", readCfgSection("Move").getConfigurationSection("B").getDouble("vl"));
         cfg.put("Bvlstop", readCfgSection("Move").getConfigurationSection("B").getDouble("vlstop"));
         cfg.put("Bvlfader", readCfgSection("Move").getConfigurationSection("B").getDouble("vlfader"));
+
+        cfg.put("C", readCfgSection("Move").getConfigurationSection("C").getBoolean("enable"));
+        cfg.put("Cvl", readCfgSection("Move").getConfigurationSection("C").getDouble("vl"));
+        cfg.put("Cvlstop", readCfgSection("Move").getConfigurationSection("C").getDouble("vlstop"));
+        cfg.put("Cvlfader", readCfgSection("Move").getConfigurationSection("C").getDouble("vlfader"));
+        cfg.put("Cpackets", readCfgSection("Move").getConfigurationSection("C").getInt("flag after count of packets"));
     }
 }

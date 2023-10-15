@@ -33,6 +33,7 @@ public class flag {
         reason.put(player, reason_s);
         if (vl_add > vl_stop) {
             Location location = oldposflag.get(player);
+            move.ignored_locations.add(location);
             player.teleport(location);
             Mx_project.getInstance().getLogger().warning(player.getName() + " failed " + reason_s + "! VL: " + vl.get(player));
             if(blocker.containsKey(player) && reason_s.toLowerCase().contains("killaura")) {
