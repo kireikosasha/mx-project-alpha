@@ -1,4 +1,4 @@
-# #MX PROJECT
+# #MX PROJECT (ver Alpha 902 Blast)
 # <p align="center">"impossible anticheat to bypass: 0.01% accuracy, virtualized machine learning checks"</p>
   
 
