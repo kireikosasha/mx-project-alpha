@@ -66,14 +66,14 @@ Move:
   B:
     enable: true
     vl: 5
-    vlstop: 35
+    vlstop: 0
     vlfader: 5
   C:
     enable: true
     vl: 20
     vlstop: 13
     vlfader: 5
-    flag after count of packets: 3
+    flag after count of packets: 2
 MachineLearning:
   JumpSpeed:
     enable: true
@@ -86,7 +86,7 @@ MachineLearning:
     localvlstop: 40
     localvlfader: 3
     #advanced support (ping / lags protection)
-    #but it cause the weakest blatant checks
+    #but it causes the weakest blatant checks
     # (recommend)
     advanced_support: true
 

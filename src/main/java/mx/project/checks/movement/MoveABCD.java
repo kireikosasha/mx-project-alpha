@@ -90,7 +90,8 @@ public class MoveABCD {
                 if (distY == oldydist.get(player) && !location.getBlock().getType().equals(WATER)
                         && !location.getBlock().getType().equals(STATIONARY_WATER) &&
                         !player.isGliding() && !location.getBlock().getType().isSolid() &&
-                !location.getBlock().getType().equals(VINE) && !location.getBlock().getType().equals(LADDER)) {
+                !location.getBlock().getType().equals(VINE) && !location.getBlock().getType().equals(LADDER)
+                && moveXdist.get(player) == 0 && moveZdist.get(player) == 0) {
                     local_c.put(player, local_c.get(player) + 1);
                     if (local_c.get(player) > (Integer) cfg.get("Cpackets")) {
                         Location oldcfpos = oldconfirmpos.get(player);
