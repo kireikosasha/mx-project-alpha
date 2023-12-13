@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.injector.temporary.TemporaryPlayer;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.google.gson.Gson;
@@ -32,6 +33,8 @@ import static mx.project.api.flag.oldposflag;
 import static mx.project.checks.movement.JumpSpeed.jumpSpeedEvent;
 import static mx.project.checks.movement.MoveABCD.*;
 import static org.bukkit.Material.*;
+import com.comphenix.protocol.injector.temporary.TemporaryPlayerFactory;
+
 
 public class move extends PacketAdapter implements Listener {
 
@@ -54,6 +57,9 @@ public class move extends PacketAdapter implements Listener {
                 PacketType.Play.Client.POSITION);
 
     }
+    private boolean isTemporaryPlayer(Player player) {
+        return player instanceof TemporaryPlayer;
+    }
 
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this, Mx_project.getInstance());
@@ -63,7 +69,7 @@ public class move extends PacketAdapter implements Listener {
                     @Override
                     public void onPacketSending(PacketEvent event) {
                         Player player = event.getPlayer();
-                        if (event.getPacketType() == PacketType.Play.Server.ENTITY_STATUS
+                        if (isTemporaryPlayer(player) && event.getPacketType() == PacketType.Play.Server.ENTITY_STATUS
                                 && event.getPlayer().equals(ProtocolLibrary.getProtocolManager().getEntityFromID(event.getPlayer().getWorld(), event.getPacket().getIntegers().read(0)))) {
                             int entityId = event.getPacket().getIntegers().read(0);
                             byte status = event.getPacket().getBytes().read(0);
