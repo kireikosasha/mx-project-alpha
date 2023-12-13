@@ -49,8 +49,15 @@ public class flag {
             command = command.replace("%reason%", reason_s);
 
             try {
-                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-                Bukkit.dispatchCommand(console, command);
+                String finalCommand = command;
+                Bukkit.getScheduler().runTaskAsynchronously(Mx_project.getInstance(), new Runnable() {
+                    @Override
+                    public void run() {
+                        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                        Bukkit.dispatchCommand(console, finalCommand);
+                    }
+                });
+
             } catch (Throwable e) {
                 e.printStackTrace();
             }

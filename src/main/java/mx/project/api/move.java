@@ -129,7 +129,7 @@ public class move extends PacketAdapter implements Listener {
         moveYdist.put(player, location.getY() - oldposmove.get(player).getY());
         moveXdist.put(player, location.getX() - oldposmove.get(player).getX());
         moveZdist.put(player, location.getZ() - oldposmove.get(player).getZ());
-        player.sendMessage(math.scaleVal(moveXdist.get(player), 2) + " " + math.scaleVal(moveZdist.get(player), 2));
+        // player.sendMessage(math.scaleVal(moveXdist.get(player), 2) + " " + math.scaleVal(moveZdist.get(player), 2));
 
         if (JumpSpeed.enable) {
             jumpSpeedEvent(event);
