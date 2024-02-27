@@ -1,6 +1,7 @@
 # #MX PROJECT (ver Alpha 902 Blast)
 # <p align="center">"impossible anticheat to bypass: 0.01% accuracy, virtualized machine learning checks"</p>
-  
+
+  WARNING: These were my first attempts to create an anti-chit. It's terrible. Do not use and do not report me about errors of this plugin
 
 
 ## 🧐 What you get?
